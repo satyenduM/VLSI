@@ -1,0 +1,59 @@
+module decoder_12 ( 
+	input in, 
+	output [1:0] out 
+); 
+// Priority decoder 
+assign out[0] = ~in; 
+assign out[1] = in; 
+endmodule 
+
+module decoder_24( 
+   input a,b,en, 
+   output d0,d1,d2,d3 
+   ); 
+   assign d0 = ~((~a)&(~b)&(~en)); 
+   assign d1 = ~((~a)&(b)&(~en)); 
+   assign d2 = ~((a)&(~b)&(~en)); 
+   assign d3 = ~((a)&(b)&(~en));   
+endmodule
+
+module decoder_38( 
+	input [2:0] in, 
+	output reg [7:0] out 
+); 
+wire [1:0] temp1, temp2, temp3; 
+// First 1:2 decoder 
+decoder_12 decoder1 ( 
+	.in(in[0]), 
+	.out(temp1) 
+); 
+// Second 1:2 decoder 
+decoder_12 decoder2 ( 
+	.in(in[1]), 
+	.out(temp2) 
+); 
+// Third 1:2 decoder 
+decoder_12 decoder3 ( 
+	.in(in[2]), 
+	.out(temp3) 
+); 
+// Output logic 
+always @* begin 
+	out[0] = temp1[0] & temp2[0] & temp3[0]; 
+	out[1] = temp1[0] & temp2[0] & temp3[1]; 
+	out[2] = temp1[0] & temp2[1] & temp3[0]; 
+	out[3] = temp1[0] & temp2[1] & temp3[1]; 
+	out[4] = temp1[1] & temp2[0] & temp3[0]; 
+	out[5] = temp1[1] & temp2[0] & temp3[1]; 
+	out[6] = temp1[1] & temp2[1] & temp3[0]; 
+	out[7] = temp1[1] & temp2[1] & temp3[1]; 
+end 
+endmodule 
+module decoder_12 ( 
+	input in, 
+	output [1:0] out 
+); 
+// Priority decoder 
+assign out[0] = ~in; 
+assign out[1] = in; 
+endmodule

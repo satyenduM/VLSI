@@ -1,0 +1,49 @@
+module comp2_1(input [1:0]a, [1:0]b, output g, e, s); 
+      	reg g, e, s; 
+           
+      	always @(*) begin 
+              	if(a == b) begin 
+                  	g = 1'b0; 
+                  	e = 1'b1; 
+                  	s = 1'b0; 
+              	end 
+              	else if(a > b) begin 
+                  	g = 1'b1; 
+                  	e = 1'b0; 
+                  	s = 1'b0; 
+              	end 
+              	else begin // a < b 
+                  	g = 1'b0; 
+                  	e = 1'b0; 
+                  	s = 1'b1; 
+              	end 
+          	end 
+    	endmodule
+
+module alu_1bit(input a, b, input [2:0] mode, output reg result); 
+always @(*) begin 
+	case(mode) 
+    	3'b000: result = a & b;   	// Logical AND & Mul 
+    	3'b001: result = a | b;   	// Logical OR 
+    	3'b010: result = a ^ b;   	// Logical XOR & Add & Sub 
+    	3'b011: result = ~(a & b);    // Logical NAND 
+    	3'b100: result = ~(a | b);    // Logical NOR 
+    	3'b101: result = ~(a ^ b);    // Logical XNOR 
+    	default: result = 1'b0;   	// Default to 0 for unknown mode 
+	endcase 
+end 
+endmodule
+
+module prbs(input clk, input reset, output Out); 
+reg [7:0] shift_reg; 
+wire feedback = (shift_reg[7]^shift_reg[6]); 
+	always @(posedge clk or posedge reset) begin  
+	if (reset) begin 
+   	shift_reg <= 8'b00000001; 
+	end  
+	else begin  
+	shift_reg <= {shift_reg[6:0], feedback}; 
+	end  
+   end 
+  assign Out = shift_reg[0]; 
+endmodule

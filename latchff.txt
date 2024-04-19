@@ -1,0 +1,105 @@
+module latchsr_1( 
+	input s, 
+	input r, 
+	input en, 
+	output q, 
+	output q0 
+	); 
+	wire x,y; 
+	assign x = ~((s)&(en)); 
+	assign y = ~((r)&(en)); 
+	assign q = ~((x)&(q0)); 
+	assign q0 = ~((y)&(q)); 
+endmodule 
+
+module srff_1( 
+	input wire clk, 
+	input wire reset, 
+	input wire s, 
+	input wire r, 
+	output reg q, 
+	output reg q_bar 
+); 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset) begin 
+        	q <= 1'b0; // Reset state 
+        	q_bar <= 1'b1; // Reset state (inverted output) 
+    	end 
+    	else begin 
+        	if (s & ~r) begin // Set condition: S=1, R=0 
+            	q <= 1'b1; 
+            	q_bar <= 1'b0; 
+        	end 
+        	else if (~s & r) begin // Reset condition: S=0, R=1 
+            	q <= 1'b0; 
+            	q_bar <= 1'b1; 
+        	end 
+        	// If both S and R are 0, maintain the current state 
+    	end 
+	end 
+endmodule 
+
+module d_flip_flop( 
+	input wire clk, 
+	input wire reset, 
+	input wire d, 
+	output reg q 
+); 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset)  
+        	q <= 1'b0; // Reset state 
+    	else  
+        	q <= d; // D input state 
+	end 
+endmodule
+
+module tff_1( 
+	input wire clk, 
+	input wire reset, 
+	input wire t, 
+	output reg q 
+); 
+	reg q_next; 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset)  
+        	q <= 1'b0; // Reset state 
+    	else begin 
+        	if (t) // T input is 1 
+            	q_next <= ~q; // Toggle q 
+        	else // T input is 0 
+            	q_next <= q; // Maintain q 
+    	end 
+	end 
+	always @* begin 
+    	q = q_next; // Update q asynchronously 
+	end 
+endmodule
+
+module jkff_1( 
+	input wire clk, 
+	input wire reset, 
+	input wire j, 
+	input wire k, 
+	output reg q 
+); 
+	reg q_next; 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset)  
+        	q <= 1'b0; // Reset state 
+    	else begin 
+        	if (j & ~k) // J=1, K=0 
+            	q_next = 1'b1; // Set 
+        	else if (~j & k) // J=0, K=1 
+            	q_next = 1'b0; // Reset 
+        	else if (j & k) // J=1, K=1 
+            	q_next = ~q; // Toggle 
+        	else // J=0, K=0 
+            	q_next = q; // Hold 
+    	end 
+	end 
+	always @* begin 
+    	q = q_next; // Update q asynchronously 
+	end 
+endmodule 
+
+

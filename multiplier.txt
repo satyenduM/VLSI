@@ -1,0 +1,18 @@
+module bm( 
+	input [3:0] A, 
+	input [3:0] B, 
+	output [7:0] Product 
+); 
+ 
+	// Intermediate wires for partial products 
+	wire [3:0] PP0, PP1, PP2, PP3; 
+ 
+	// Generate partial products 
+	assign PP0 = A & {4{B[0]}};   
+	assign PP1 = A & {4{B[1]}};  
+	assign PP2 = A & {4{B[2]}}; 
+	assign PP3 = A & {4{B[3]}}; 
+ 
+	// Summation of partial products (with shifting) 
+	assign Product = (PP0 + (PP1 << 1) + (PP2 << 2) + (PP3 << 3));  
+endmodule

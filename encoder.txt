@@ -1,0 +1,46 @@
+module encoder_21( 
+	input a,b, 
+	output y 
+	); 
+	assign y = a|b; 
+endmodule
+
+module encoder_42( 
+
+	input a,b,c,d, 
+	output x,y,z 
+	); 
+	assign x = c|d; 
+	assign y = d|(b&(~c)); 
+	assign z = a|b|c|d; 
+endmodule 
+
+module encoder_83_1( 
+	input d0, 
+	input d1, 
+	input d2, 
+	input d3, 
+	input d4, 
+	input d5, 
+	input d6, 
+	input d7, 
+	output q0, 
+	output q1, 
+	output q2 
+	); 
+or (q0,d1,d3,d5,d7),(q1,d2,d3,d6,d7),(q2,d4,d5,d6,d7); 
+endmodule 
+
+module penc_1( 
+	input a0, 
+	input a1, 
+	input a2, 
+	input a3, 
+	output y0, 
+	output y1, 
+	output v 
+	); 
+	assign y0= a3|a2; 
+	assign y1=a3|(~a2&a1); 
+	assign v=a3|a2|a1|a0; 
+endmodule

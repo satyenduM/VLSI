@@ -1,0 +1,20 @@
+module dataflow_hs( 
+	input a, 
+	input b, 
+	output c, 
+	output d 
+	); 
+	assign c = a^b; 
+	assign d = ~a&b; 
+endmodule 
+
+module dataflow_fs( 
+	input a, 
+	input b, 
+	input c, 
+	output d, 
+	output cout 
+	); 
+	assign cout = a^b^c; 
+	assign d = ~a&b|~a&c|b&c; 
+endmodule

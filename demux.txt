@@ -1,0 +1,54 @@
+module dmux_21( 
+   input a, 
+
+   input s, 
+   output y0, 
+   output y1 
+   ); 
+   reg y0,y1; 
+   always@(a,s) 
+   begin 
+   y0=(~s&a); 
+   y1=(s&a); 
+   end 
+endmodule 
+
+module dmux_14( 
+   input a, 
+   input s0, 
+   input s1, 
+   output y0,y1,y2,y3 
+   ); 
+   assign y0 = (~s0&~s1&a); 
+   assign y1 = (~s0&s1&a); 
+   assign y2 = (s0&~s1&a); 
+   assign y3 = (s0&s1&a); 
+endmodule
+
+module dmux_18( 
+	input a,s0,s1,s2, 
+	output y0,y1,y2,y3,y4,y5,y6,y7 
+	); 
+	wire x1,x2,x3,x4,x5,x6; 
+	dmux_21 m1(a,s2,x1,x2); 
+	dmux_21 m2(x1,s1,x3,x4); 
+	dmux_21 m3(x2,s1,x5,x6); 
+	dmux_21 m4(x3,s0,y0,y1); 
+	dmux_21 m5(x4,s0,y2,y3); 
+	dmux_21 m6(x5,s0,y4,y5); 
+	dmux_21 m7(x6,s0,y6,y7); 
+endmodule 
+//1:2 DEMUX 
+module dmux_21( 
+   input a, 
+   input s, 
+   output y0, 
+   output y1 
+   ); 
+   reg y0,y1; 
+   always@(a,s) 
+   begin 
+   y0=(~s&a); 
+   y1=(s&a); 
+   end 
+endmodule 

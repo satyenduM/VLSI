@@ -1,0 +1,28 @@
+module mux_1( 
+	input p, 
+	input q, 
+	input s, 
+	output w 
+	); 
+	assign w = ((~s&p)|(s&q)); 
+endmodule
+
+module mux_2( 
+   input a, 
+   input b, 
+   input c, 
+   input d, 
+   input s1, 
+   input s2, 
+   output y 
+   ); 
+   assign y = ((~s1&~s2&a)|(~s1&s2&b)|(s1&~s2&c)|(s1&s2&d)); 
+endmodule
+
+module mux_2( 
+   input a, b, c, d, e, f, g, h, 
+   input s1, s2, s3, 
+   output y 
+   ); 
+   assign y =((~s1&~s2&~s3&a)|(~s1&~s2&s3&b)|(~s1&s2&~s3&c)|(~s1&s2&s3&d)|(s1&~s2&~s3&e)|(s1&~s2&s3&f)|(s1&s2&~s3&g)|(s1&s2&s3&h)); 
+endmodule 

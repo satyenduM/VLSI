@@ -1,0 +1,56 @@
+module and_1( 
+	input a, 
+	input b, 
+	output x 
+	); 
+	assign x = a&b; 
+endmodule
+
+module or_1( 
+	input a, 
+	input b, 
+	output x 
+	); 
+	assign x = a|b; 
+endmodule 
+
+module not_1( 
+	input a, 
+	output x 
+	); 
+	assign x = ~a; 
+endmodule 
+
+module xor_1( 
+	input a, 
+	input b, 
+
+
+	output x 
+	); 
+	assign x = a^b; 
+endmodule 
+
+module xnor_1( 
+	input a, 
+input b, 
+	output x 
+	); 
+	assign x = (~(a^b)); 
+endmodule 
+
+module nand_1( 
+input a, 
+	input b, 
+	output c 
+	); 
+	assign c = (~(a&b)); 
+endmodule
+
+module nor_1( 
+	input a, 
+	input b, 
+output c 
+	); 
+	assign c = (~(a|b)); 
+endmodule 
