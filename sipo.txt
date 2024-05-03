@@ -1,5 +1,4 @@
 module sipo_b1( 
-
 	input wire clk,     	// Clock input 
 	input wire reset,   	// Reset input 
 	input wire serial_in,   // Serial input 

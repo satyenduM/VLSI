@@ -11,6 +11,19 @@ module siso_1(
     	d_flip_flop ad3(clk, reset, q2, q3); // D input state 
     	assign q=q3; 
 endmodule
+module d_flip_flop( 
+	input wire clk, 
+	input wire reset, 
+	input wire d, 
+	output reg q 
+); 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset)  
+        	q <= 1'b0; // Reset state 
+    	else  
+        	q <= d; // D input state 
+	end 
+endmodule 
 
 module siso_tb(); 
 	reg clk = 0; 

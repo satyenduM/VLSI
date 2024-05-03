@@ -1,0 +1,49 @@
+module pipo_b1( 
+	input wire clk,        	
+	input wire reset,     
+	input wire [3:0]parallel_in,
+	output reg [3:0] parallel_out 
+); 
+	// Internal signals 
+	reg [3:0] reg_data; // Data register 
+	// Register logic 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset) begin 
+        	reg_data <= 4'b0000; // Reset state 
+    	end 
+    	else begin 
+        	reg_data <= parallel_in; // Load parallel input on clock edge 
+    	end 
+	end 
+	// Assign parallel output 
+	always @* begin 
+    	parallel_out = reg_data; // Output parallel input on parallel output 
+	end 
+endmodule
+
+module pipo_tb(); 
+	reg clk = 0; 
+	reg reset = 1; 
+	reg [3:0] parallel_in = 4'b0000; 
+	wire [3:0] parallel_out; 
+	pipo_b1 pipo_1 ( 
+    	.clk(clk), 
+    	.reset(reset), 
+    	.parallel_in(parallel_in), 
+    	.parallel_out(parallel_out) 
+	); 
+	always #5 clk = ~clk; 
+	initial begin 
+    	clk = 0; 
+    	reset = 1; 
+    	parallel_in = 4'b0000; 
+    	#10 reset = 0; 
+	end 
+	initial begin 
+    	#10 parallel_in = 4'b1010; 
+    	#10 parallel_in = 4'b0110; 
+    	#10 parallel_in = 4'b1100; 
+    	#60; 
+	end 
+	always #1 $display("Time=%t, parallel_out=%b", $time, parallel_out); 
+endmodule
