@@ -10,7 +10,8 @@ module siso_1(
     	d_flip_flop ad2(clk, reset, q1, q2); // D input state 
     	d_flip_flop ad3(clk, reset, q2, q3); // D input state 
     	assign q=q3; 
-endmodule 
+endmodule
+
 module d_flip_flop( 
 	input wire clk, 
 	input wire reset, 

@@ -1,0 +1,55 @@
+module sipo_b1( 
+
+	input wire clk,     	// Clock input 
+	input wire reset,   	// Reset input 
+	input wire serial_in,   // Serial input 
+	output reg [3:0] parallel_out // Parallel output 
+); 
+	// Internal signals 
+	reg q0; 
+	reg q1; 
+	reg q2; 
+	reg q3; // Individual flip-flop outputs 
+	// Flip-flop logic 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset) begin 
+        	q0 <= 1'b0; // Reset state 
+        	q1 <= 1'b0; 
+        	q2 <= 1'b0; 
+        	q3 <= 1'b0; 
+    	end 
+    	else begin 
+        	q0 <= serial_in; // D input state 
+        	q1 <= q0; 
+        	q2 <= q1; 
+        	q3 <= q2; 
+    	end 
+	end 
+	// Assign output 
+	always @* begin 
+    	parallel_out = {q3, q2, q1, q0}; // Output connected to the individual flip-flop outputs 
+	end 
+endmodule
+
+module sipo_tb(); 
+	reg clk = 0; 
+	reg reset = 1; 
+	reg serial_in = 0; 
+	wire [3:0] parallel_out; 
+	sipo_b1 sipo_2 (.clk(clk), .reset(reset), .serial_in(serial_in), .parallel_out(parallel_out)); 
+	// Clock generation 
+	always #5 clk = ~clk; 
+	initial begin 
+    	clk = 0; 
+    	reset = 1; 
+    	serial_in = 0; 
+    	#10 reset = 0; // Release reset after 10 time units 
+	end 
+	initial begin 
+    	// Apply serial input sequence 
+    	#10 serial_in = 1; 
+    	#10 serial_in = 0; 
+    	#40 ; 
+	end 
+	always #1 $display("Time=%t, parallel_out=%b", $time, parallel_out); 
+endmodule 

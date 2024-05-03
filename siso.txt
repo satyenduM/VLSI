@@ -1,0 +1,29 @@
+module siso_1( 
+	input wire clk, 
+	input wire reset, 
+	input wire x, 
+	output q 
+	); 
+    	wire q0,q1,q2,q3; 
+    	d_flip_flop ad0(clk, reset, x, q0); // D input state 
+    	d_flip_flop ad1(clk, reset, q0, q1); // D input state 
+    	d_flip_flop ad2(clk, reset, q1, q2); // D input state 
+    	d_flip_flop ad3(clk, reset, q2, q3); // D input state 
+    	assign q=q3; 
+endmodule
+
+module siso_tb(); 
+	reg clk = 0; 
+	reg reset = 1; 
+	reg x = 0; 
+	wire q; 
+	siso_b1 siso_2(.clk(clk),
+.reset(reset),.x(x),.q(q)); 
+	always #5 clk = ~clk; 
+	initial begin 
+    	#5 reset = 0;  // Release reset after 5 time units 
+    	#10 x = 1;     // Apply input '1' after 10 time units 
+    	#10 x = 0;     // Apply input '0' after 10 time units 
+    	#50;   // End simulation after 100 time units 
+	end 
+endmodule 
