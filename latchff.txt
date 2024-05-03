@@ -10,7 +10,25 @@ module latchsr_1(
 	assign y = ~((r)&(en)); 
 	assign q = ~((x)&(q0)); 
 	assign q0 = ~((y)&(q)); 
+endmodule
+module srlatch_tb(); 
+	reg s, r, en; 
+	wire q, q0; 
+	latchsr_1 latchsr_2 (s, r, en, q, q0);  
+	initial begin 
+    	s = 0; r = 0; en = 0; 
+    	#10 en = 1;  // Enable the latch 
+    	#10 s = 1; r = 0; // Set Q 
+    	#10 s = 0; r = 0; // Hold state 
+    	#10 s = 0; r = 1; // Reset Q 
+    	#10 s = 0; r = 0; // Hold state 
+    	#10 s = 1; r = 1; // (Potentially undefined condition) 
+    	#10 en = 0; // Disable the latch 
+    	#10 s = 1; r = 0; // Inputs should have no effect 
+    	#10;  // End simulation 
+	end 
 endmodule 
+
 
 module srff_1( 
 	input wire clk, 
@@ -37,7 +55,29 @@ module srff_1(
         	// If both S and R are 0, maintain the current state 
     	end 
 	end 
-endmodule 
+endmodule
+module srff_tb(); 
+	reg clk, reset, s, r; 
+	wire q, q_bar; 
+	srff_1 srff_2 (clk, reset, s, r, q, q_bar); 
+	// Generate a clock signal 
+	initial begin 
+    	clk = 0; 
+    	forever #5 clk = ~clk;  
+	end 
+	initial begin 
+    	reset = 1; s = 0; r = 0; 
+    	#10 reset = 0; // Release reset 
+    	#10 s = 1; r = 0; 
+    	#20 s = 0; r = 0; // Hold state 
+    	#10 s = 0; r = 1; 
+    	#20 s = 0; r = 0;  // Hold state 
+    	// Invalid (S=R=1) - should ideally be avoided 
+    	#10 s = 1; r = 1; 
+    	#10; 
+	end  
+endmodule
+
 
 module d_flip_flop( 
 	input wire clk, 
@@ -52,6 +92,25 @@ module d_flip_flop(
         	q <= d; // D input state 
 	end 
 endmodule
+module dff_tb(); 
+	reg clk, reset, d; 
+	wire q; 
+	d_flip_flop dff_2 (clk, reset, d, q); 
+	initial begin 
+    	clk = 0; 
+    	forever #5 clk = ~clk; 
+	end 
+initial  
+	begin 
+    	reset = 1; d = 0; 
+    	#10 reset = 0;   
+    	#10 d = 1; 
+    	#20 d = 0;  
+    	#10 d = 1; 
+    	#20; 
+	end 
+endmodule 
+
 
 module tff_1( 
 	input wire clk, 
@@ -74,6 +133,27 @@ module tff_1(
     	q = q_next; // Update q asynchronously 
 	end 
 endmodule
+module tff_tb(); 
+	reg clk, reset, t; 
+	wire q; 
+	tff_1 tff_2 (clk, reset, t, q); 
+	initial begin 
+    	clk = 0; 
+    	forever #5 clk = ~clk;  
+	end 
+	initial  
+	begin 
+    	reset = 1; t = 0; 
+    	#10 reset = 0; // Release reset 
+    	// Toggle the flip-flop several times 
+    	#10 t = 1; 
+    	#10 t = 0;  
+    	#10 t = 1; 
+    	#20 t = 0; 
+    	#20;  
+	end  
+endmodule
+
 
 module jkff_1( 
 	input wire clk, 
@@ -101,5 +181,32 @@ module jkff_1(
     	q = q_next; // Update q asynchronously 
 	end 
 endmodule 
+module jkff_1( 
+	input wire clk, 
+	input wire reset, 
+	input wire j, 
+	input wire k, 
+	output reg q 
+); 
+	reg q_next; 
+	always @(posedge clk or posedge reset) begin 
+    	if (reset)  
+        	q <= 1'b0; // Reset state 
+    	else begin 
+        	if (j & ~k) // J=1, K=0 
+            	q_next = 1'b1; // Set 
+        	else if (~j & k) // J=0, K=1 
+            	q_next = 1'b0; // Reset 
+        	else if (j & k) // J=1, K=1 
+            	q_next = ~q; // Toggle 
+        	else // J=0, K=0 
+            	q_next = q; // Hold 
+    	end 
+	end 
+	always @* begin 
+    	q = q_next; // Update q asynchronously 
+	end 
+endmodule 
+
 
 
